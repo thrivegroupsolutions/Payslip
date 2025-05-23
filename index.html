@@ -1,60 +1,157 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Payslip Generator</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; margin: 2rem; }
-    label { display: block; margin-top: 1rem; }
-    input { width: 300px; padding: 0.5rem; }
-    button { margin-top: 2rem; padding: 0.7rem 1.5rem; font-size: 1rem; }
+    /* Reset & base */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: #fff;
+      max-width: 400px;
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      padding: 2rem;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 1.5rem;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 600;
+      color: #34495e;
+    }
+    input {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      margin-top: 0.4rem;
+      border: 1.8px solid #bdc3c7;
+      border-radius: 5px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+    input:focus {
+      border-color: #3498db;
+      outline: none;
+      box-shadow: 0 0 8px rgba(52,152,219,0.3);
+    }
+    button {
+      width: 100%;
+      margin-top: 2rem;
+      padding: 0.8rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: white;
+      background: #2980b9;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background: #1c5980;
+    }
+    /* Responsive */
+    @media (max-width: 450px) {
+      body {
+        padding: 1rem;
+      }
+      .container {
+        padding: 1.5rem;
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>Payslip Generator</h1>
+  <div class="container">
+    <h1>Payslip Generator</h1>
 
-  <label>Employee Name: <input id="name" /></label>
-  <label>Designation: <input id="designation" /></label>
-  <label>Base Salary: <input id="base" type="number" /></label>
-  <label>HRA: <input id="hra" type="number" /></label>
-  <label>Other Allowance: <input id="other" type="number" /></label>
-  <label>Deductions: <input id="deduct" type="number" /></label>
+    <label for="name">Employee Name</label>
+    <input id="name" type="text" placeholder="Enter employee name" />
 
-  <button onclick="generatePayslip()">Generate Payslip PDF</button>
+    <label for="designation">Designation</label>
+    <input id="designation" type="text" placeholder="Enter designation" />
+
+    <label for="base">Base Salary (₹)</label>
+    <input id="base" type="number" placeholder="Enter base salary" />
+
+    <label for="hra">HRA (₹)</label>
+    <input id="hra" type="number" placeholder="Enter HRA amount" />
+
+    <label for="other">Other Allowance (₹)</label>
+    <input id="other" type="number" placeholder="Enter other allowances" />
+
+    <label for="deduct">Deductions (₹)</label>
+    <input id="deduct" type="number" placeholder="Enter deductions" />
+
+    <button onclick="generatePayslip()">Generate Payslip PDF</button>
+  </div>
 
   <script>
     async function generatePayslip() {
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
 
-      const name = document.getElementById("name").value;
-      const designation = document.getElementById("designation").value;
-      const base = parseFloat(document.getElementById("base").value || 0);
-      const hra = parseFloat(document.getElementById("hra").value || 0);
-      const other = parseFloat(document.getElementById("other").value || 0);
-      const deduct = parseFloat(document.getElementById("deduct").value || 0);
+      const name = document.getElementById("name").value.trim();
+      const designation = document.getElementById("designation").value.trim();
+      const base = parseFloat(document.getElementById("base").value) || 0;
+      const hra = parseFloat(document.getElementById("hra").value) || 0;
+      const other = parseFloat(document.getElementById("other").value) || 0;
+      const deduct = parseFloat(document.getElementById("deduct").value) || 0;
       const total = base + hra + other;
       const net = total - deduct;
 
+      if (!name || !designation) {
+        alert("Please enter employee name and designation.");
+        return;
+      }
+
       let y = 20;
-      doc.setFontSize(16);
-      doc.text("Payslip", 90, y);
-      y += 20;
+      doc.setFontSize(18);
+      doc.setTextColor("#2c3e50");
+      doc.text("Payslip", 105, y, null, null, "center");
+      y += 15;
 
       doc.setFontSize(12);
+      doc.setTextColor("#34495e");
       doc.text(`Employee Name: ${name}`, 20, y); y += 10;
       doc.text(`Designation: ${designation}`, 20, y); y += 10;
-      doc.text(`Base Salary: ₹${base}`, 20, y); y += 10;
-      doc.text(`HRA: ₹${hra}`, 20, y); y += 10;
-      doc.text(`Other Allowance: ₹${other}`, 20, y); y += 10;
-      doc.text(`Deductions: ₹${deduct}`, 20, y); y += 10;
-      doc.text(`Total Earnings: ₹${total}`, 20, y); y += 10;
-      doc.text(`Net Pay: ₹${net}`, 20, y); y += 20;
+      doc.text(`Base Salary: ₹${base.toFixed(2)}`, 20, y); y += 10;
+      doc.text(`HRA: ₹${hra.toFixed(2)}`, 20, y); y += 10;
+      doc.text(`Other Allowance: ₹${other.toFixed(2)}`, 20, y); y += 10;
+      doc.text(`Deductions: ₹${deduct.toFixed(2)}`, 20, y); y += 10;
+
+      doc.setDrawColor(0, 0, 0);
+      doc.line(20, y, 190, y);
+      y += 10;
+
+      doc.setFontSize(14);
+      doc.setTextColor("#2980b9");
+      doc.text(`Total Earnings: ₹${total.toFixed(2)}`, 20, y); y += 10;
+      doc.text(`Net Pay: ₹${net.toFixed(2)}`, 20, y); y += 20;
 
       doc.setFontSize(10);
+      doc.setTextColor("#7f8c8d");
       doc.text("This is a system-generated payslip.", 20, y);
 
-      doc.save(`Payslip_${name.replace(" ", "_")}.pdf`);
+      doc.save(`Payslip_${name.replace(/\s+/g, "_")}.pdf`);
     }
   </script>
 </body>
