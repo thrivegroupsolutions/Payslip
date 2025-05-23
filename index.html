@@ -6,7 +6,6 @@
   <title>Payslip Generator</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    /* Background Gradient */
     body {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -18,7 +17,6 @@
       padding: 1rem;
     }
 
-    /* Card Container */
     .container {
       background: #fff;
       max-width: 400px;
@@ -80,7 +78,6 @@
       box-shadow: 0 8px 30px rgba(26, 84, 196, 0.7);
     }
 
-    /* Responsive */
     @media (max-width: 450px) {
       .container {
         padding: 2rem 1.5rem;
@@ -133,11 +130,28 @@
       }
 
       let y = 20;
+
+      // Company Name header
+      doc.setFontSize(20);
+      doc.setTextColor("#6a11cb");
+      doc.setFont("helvetica", "bold");
+      doc.text("Thrive Group Solutions", 105, y, null, null, "center");
+      y += 10;
+
+      // Line under header
+      doc.setDrawColor(106, 17, 203);
+      doc.setLineWidth(1.5);
+      doc.line(20, y, 190, y);
+      y += 15;
+
+      // Payslip title
       doc.setFontSize(18);
       doc.setTextColor("#2c3e50");
+      doc.setFont("helvetica", "normal");
       doc.text("Payslip", 105, y, null, null, "center");
       y += 15;
 
+      // Employee details
       doc.setFontSize(12);
       doc.setTextColor("#34495e");
       doc.text(`Employee Name: ${name}`, 20, y); y += 10;
@@ -147,19 +161,24 @@
       doc.text(`Other Allowance: ₹${other.toFixed(2)}`, 20, y); y += 10;
       doc.text(`Deductions: ₹${deduct.toFixed(2)}`, 20, y); y += 10;
 
+      // Horizontal line before totals
       doc.setDrawColor(0, 0, 0);
+      doc.setLineWidth(0.5);
       doc.line(20, y, 190, y);
       y += 10;
 
+      // Totals
       doc.setFontSize(14);
       doc.setTextColor("#2575fc");
       doc.text(`Total Earnings: ₹${total.toFixed(2)}`, 20, y); y += 10;
       doc.text(`Net Pay: ₹${net.toFixed(2)}`, 20, y); y += 20;
 
+      // Footer note
       doc.setFontSize(10);
       doc.setTextColor("#7f8c8d");
       doc.text("This is a system-generated payslip.", 20, y);
 
+      // Save PDF file
       doc.save(`Payslip_${name.replace(/\s+/g, "_")}.pdf`);
     }
   </script>
