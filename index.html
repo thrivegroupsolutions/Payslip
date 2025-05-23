@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Payslip Generator</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; }
+    label { display: block; margin-top: 1rem; }
+    input { width: 300px; padding: 0.5rem; }
+    button { margin-top: 2rem; padding: 0.7rem 1.5rem; font-size: 1rem; }
+  </style>
+</head>
+<body>
+  <h1>Payslip Generator</h1>
+
+  <label>Employee Name: <input id="name" /></label>
+  <label>Designation: <input id="designation" /></label>
+  <label>Base Salary: <input id="base" type="number" /></label>
+  <label>HRA: <input id="hra" type="number" /></label>
+  <label>Other Allowance: <input id="other" type="number" /></label>
+  <label>Deductions: <input id="deduct" type="number" /></label>
+
+  <button onclick="generatePayslip()">Generate Payslip PDF</button>
+
+  <script>
+    async function generatePayslip() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      const name = document.getElementById("name").value;
+      const designation = document.getElementById("designation").value;
+      const base = parseFloat(document.getElementById("base").value || 0);
+      const hra = parseFloat(document.getElementById("hra").value || 0);
+      const other = parseFloat(document.getElementById("other").value || 0);
+      const deduct = parseFloat(document.getElementById("deduct").value || 0);
+      const total = base + hra + other;
+      const net = total - deduct;
+
+      let y = 20;
+      doc.setFontSize(16);
+      doc.text("Payslip", 90, y);
+      y += 20;
+
+      doc.setFontSize(12);
+      doc.text(`Employee Name: ${name}`, 20, y); y += 10;
+      doc.text(`Designation: ${designation}`, 20, y); y += 10;
+      doc.text(`Base Salary: ₹${base}`, 20, y); y += 10;
+      doc.text(`HRA: ₹${hra}`, 20, y); y += 10;
+      doc.text(`Other Allowance: ₹${other}`, 20, y); y += 10;
+      doc.text(`Deductions: ₹${deduct}`, 20, y); y += 10;
+      doc.text(`Total Earnings: ₹${total}`, 20, y); y += 10;
+      doc.text(`Net Pay: ₹${net}`, 20, y); y += 20;
+
+      doc.setFontSize(10);
+      doc.text("This is a system-generated payslip.", 20, y);
+
+      doc.save(`Payslip_${name.replace(" ", "_")}.pdf`);
+    }
+  </script>
+</body>
+</html>
