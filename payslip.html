@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign Up - Thrive Group Solutions</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+    .container {
+      background: #fff;
+      max-width: 400px;
+      width: 100%;
+      border-radius: 15px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+      padding: 2.5rem 2rem;
+      color: #34495e;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 600;
+      color: #34495e;
+    }
+    input {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      margin-top: 0.4rem;
+      border: 2px solid #bdc3c7;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    input:focus {
+      border-color: #2575fc;
+      box-shadow: 0 0 8px rgba(37, 117, 252, 0.5);
+      outline: none;
+    }
+    button {
+      width: 100%;
+      margin-top: 2.5rem;
+      padding: 0.9rem;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: white;
+      background: #2575fc;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(37, 117, 252, 0.5);
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    button:hover {
+      background: #1a54c4;
+      box-shadow: 0 8px 30px rgba(26, 84, 196, 0.7);
+    }
+    .error {
+      color: #e74c3c;
+      margin-top: 0.8rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Sign Up</h1>
+    <form id="signupForm">
+      <label for="username">Username</label>
+      <input id="username" type="text" placeholder="Enter username" required />
+
+      <label for="email">Email</label>
+      <input id="email" type="email" placeholder="Enter email" required />
+
+      <label for="password">Password</label>
+      <input id="password" type="password" placeholder="Enter password" required minlength="6" />
+
+      <button type="submit">Create Account</button>
+      <div id="errorMsg" class="error"></div>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const username = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      const errorMsg = document.getElementById('errorMsg');
+      errorMsg.textContent = '';
+
+      if (!username || !email || !password) {
+        errorMsg.textContent = 'All fields are required.';
+        return;
+      }
+
+      if (password.length < 6) {
+        errorMsg.textContent = 'Password must be at least 6 characters.';
+        return;
+      }
+
+      // Simple email pattern check
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(email)) {
+        errorMsg.textContent = 'Please enter a valid email address.';
+        return;
+      }
+
+      // "Register" the user by saving username in localStorage
+      localStorage.setItem('loggedInUser', username);
+
+      // Redirect to payslip page (change filename if needed)
+      window.location.href = 'payslip.html';
+    });
+  </script>
+</body>
+</html>
